@@ -1,10 +1,11 @@
-# WattWealth Prototype
+# WattWealth Prototype — Elegant interactive version
 
-Interactive prototype demonstrating:
-- Real-time flow visualization
-- Micro-savings narrative
-- 24h forecast + appliance timing tips
+Files:
+- index.html
+- styles.css
+- app.js
+- mockData.json
 
-Built as a static prototype (index.html + JS + Chart.js) so non-developers can edit it via GitHub web UI and deploy to Vercel.
+How to edit: open these files in GitHub (Add file → Create new file OR click file → Edit) and paste updated content. Vercel will auto-deploy after commit.
 
-To edit: open files in the repo on GitHub, click Edit, paste new content, commit, and Vercel auto-deploys.
+This prototype is static (no build): simple HTML + JS + Chart.js. Use mockData.json to tweak values and see animations.
