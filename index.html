@@ -1,0 +1,77 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>WattWealth Prototype</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="styles.css">
+  <!-- Chart.js from CDN -->
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+<body>
+  <header class="topbar">
+    <button id="menuBtn" class="hamburger">☰</button>
+    <h1>WattWealth — Energy Overview</h1>
+    <div class="profile">Hello, John</div>
+  </header>
+
+  <main class="container">
+    <!-- Realtime flow -->
+    <section class="card flow-card">
+      <h2>Live Energy Flow</h2>
+      <div class="flow-area">
+        <svg id="flowSVG" viewBox="0 0 600 400" preserveAspectRatio="xMidYMid meet">
+          <!-- Solar (top) -->
+          <circle id="solarCircle" cx="300" cy="60" r="36" class="icon solar"/>
+          <text x="300" y="98" text-anchor="middle" class="flow-label" id="solarK">0.0 kW</text>
+
+          <!-- Battery (left) -->
+          <circle id="batteryCircle" cx="120" cy="220" r="36" class="icon battery"/>
+          <text x="120" y="258" text-anchor="middle" class="flow-label" id="batteryPct">0%</text>
+
+          <!-- Grid (right) -->
+          <circle id="gridCircle" cx="480" cy="220" r="36" class="icon grid"/>
+          <text x="480" y="258" text-anchor="middle" class="flow-label" id="gridK">0.0 kW</text>
+
+          <!-- Home (bottom) -->
+          <circle id="homeCircle" cx="300" cy="340" r="36" class="icon home"/>
+          <text x="300" y="378" text-anchor="middle" class="flow-label" id="homeK">0.0 kW</text>
+
+          <!-- Flow lines -->
+          <path id="pSolarToHome" d="M300 96 L300 220" class="flow-line solar-line" />
+          <path id="pSolarToBattery" d="M265 95 L145 220" class="flow-line solar-line" />
+          <path id="pBatteryToHome" d="M156 220 L275 320" class="flow-line battery-line" />
+          <path id="pGridToHome" d="M445 220 L325 320" class="flow-line grid-line" />
+        </svg>
+
+        <div class="flow-stats">
+          <div class="stat"><strong id="savingRate">€0.00</strong><div class="muted">saving/hr</div></div>
+          <div class="stat"><strong id="greenPercent">0%</strong><div class="muted">green now</div></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Savings narrative -->
+    <section class="card narrative-card">
+      <h2>Micro-Savings Story</h2>
+      <div id="narrativeText">Loading narrative…</div>
+      <div class="narrative-actions">
+        <button id="seeMoreBtn">Show details</button>
+      </div>
+    </section>
+
+    <!-- Forecast & tips -->
+    <section class="card forecast-card">
+      <h2>Price & Solar Forecast (next 24h)</h2>
+      <canvas id="forecastChart" height="120"></canvas>
+      <div id="tipsArea" class="tips"></div>
+    </section>
+  </main>
+
+  <footer class="footer">Prototype • WattWealth</footer>
+
+  <script src="app.js"></script>
+</body>
+</html>
