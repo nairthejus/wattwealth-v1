@@ -1,0 +1,54 @@
+:root{
+  --ww-green: #0EAA4B;
+  --bg: #F7F9FB;
+  --card: #ffffff;
+  --muted: #6b7280;
+  --accent: #0EAA4B;
+  --shadow: 0 6px 18px rgba(12,18,30,0.06);
+  font-family: "Inter", system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial;
+}
+
+*{box-sizing:border-box}
+html,body{height:100%;margin:0;background:var(--bg);color:#0b1220}
+
+.topbar{
+  height:64px;display:flex;align-items:center;gap:16px;padding:0 18px;background:#072033;color:#fff;
+}
+.topbar h1{font-size:16px;margin:0;font-weight:600}
+.topbar .profile{margin-left:auto;font-weight:600}
+
+.container{max-width:980px;margin:20px auto;padding:0 16px;display:grid;grid-template-columns:1fr;gap:16px}
+.card{background:var(--card);border-radius:14px;padding:16px;box-shadow:var(--shadow)}
+
+.flow-area{display:flex;gap:18px;align-items:center;justify-content:space-between}
+svg{width:62%;height:220px}
+.icon{fill:#fff;stroke:none;filter:drop-shadow(0 6px 12px rgba(2,6,23,0.06))}
+.flow-label{font-size:12px;fill:#0b1220; font-weight:600}
+
+.icon.solar{fill:#fff; stroke: none; }
+.icon.battery{fill:#e6fbef}
+.icon.grid{fill:#eaf5ff}
+.icon.home{fill:#f2f6f9}
+
+.flow-line{fill:none;stroke-width:6;stroke-linecap:round;opacity:0.9}
+.solar-line{stroke: #e6b800}
+.battery-line{stroke: #0EAA4B}
+.grid-line{stroke: #1e90ff}
+
+.flow-stats{display:flex;flex-direction:column;gap:6px;padding:8px;width:34%}
+.stat{background:#f6fbf8;padding:10px;border-radius:8px}
+.stat strong{font-size:18px;display:block}
+.muted{color:var(--muted);font-size:12px}
+
+.narrative-card #narrativeText{font-size:15px;line-height:1.45;color:#0b1220}
+.narrative-actions{margin-top:12px}
+.narrative-actions button{background:var(--accent);color:#fff;border:none;padding:8px 12px;border-radius:8px;cursor:pointer}
+
+.forecast-card .tips{margin-top:8px;padding:8px;background:#f3faf8;border-radius:8px;color:#0b1220}
+
+.footer{max-width:980px;margin:20px auto;text-align:center;color:#6b7280;font-size:13px}
+@media (max-width:720px){
+  svg{width:100%;height:200px}
+  .flow-area{flex-direction:column;align-items:stretch}
+  .flow-stats{width:100%;flex-direction:row;justify-content:space-between}
+}
