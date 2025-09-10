@@ -1,56 +1,98 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>WattWealth — Prototype (Detailed)</title>
-
-  <!-- fonts + Chart.js -->
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700;800&display=swap" rel="stylesheet">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>WattWealth Dashboard</title>
+  <link rel="stylesheet" href="styles.css"/>
   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-
-  <link rel="stylesheet" href="styles.css">
 </head>
 <body>
-  <!-- SIDEBAR -->
-  <aside id="sidebar" class="sidebar hidden" aria-hidden="true">
-    <button id="closeNav" class="icon-btn">✕</button>
-    <div class="side-profile">
-      <div class="avatar">J</div>
-      <div>
-        <div class="name">John Doe</div>
-        <div class="id muted">Home ID: 123456</div>
-      </div>
-    </div>
+  <!-- Sidebar toggle button -->
+  <button id="menu-toggle" class="menu-button">☰</button>
 
-    <nav class="side-nav">
-      <button class="side-item active">Overview</button>
-      <button class="side-item">Forecast</button>
-      <button class="side-item">Battery</button>
-      <button class="side-item">Settings</button>
-      <button class="side-item">Help</button>
+  <!-- Sidebar -->
+  <aside id="sidebar" class="sidebar">
+    <h2>WattWealth</h2>
+    <nav>
+      <ul>
+        <li><a href="#">Dashboard</a></li>
+        <li><a href="#">Forecast</a></li>
+        <li><a href="#">Impact</a></li>
+        <li><a href="#">Battery Health</a></li>
+        <li><a href="#">Profile</a></li>
+        <li><a href="#">Settings</a></li>
+      </ul>
     </nav>
-
-    <div class="side-footer">
-      <div class="small muted">WattWealth • Prototype</div>
-      <button id="logoutBtn" class="ghost full">Log out</button>
-    </div>
   </aside>
 
-  <!-- TOPBAR -->
-  <header class="topbar">
-    <button id="menuBtn" class="hamburger" aria-label="Open menu">☰</button>
-    <div class="brand">WattWealth</div>
-    <div class="top-actions">
-      <div class="chip">Premium</div>
-      <div class="profile-sm">J</div>
-    </div>
-  </header>
+  <!-- Main Content -->
+  <main class="main-content">
+    <!-- Energy Flow Section -->
+    <section class="flow-section">
+      <h2>Live Energy Flow</h2>
+      <div id="energyFlow" class="energy-flow">
+        <!-- House-like diagram with animations -->
+        <svg width="400" height="260" viewBox="0 0 400 260">
+          <!-- Solar -->
+          <circle cx="60" cy="50" r="30" fill="#FFD700"/>
+          <text x="60" y="100" text-anchor="middle">Solar</text>
+          <!-- Battery -->
+          <rect x="160" y="150" width="40" height="70" fill="#0EAA4B"/>
+          <text x="180" y="240" text-anchor="middle">Battery</text>
+          <!-- Grid -->
+          <circle cx="340" cy="50" r="30" fill="#00BFFF"/>
+          <text x="340" y="100" text-anchor="middle">Grid</text>
+          <!-- Home -->
+          <rect x="280" y="150" width="60" height="60" fill="#999"/>
+          <text x="310" y="240" text-anchor="middle">Home</text>
 
-  <!-- MAIN -->
-  <main class="main">
-    <!-- Hero section with house + flows (left) and key metrics (right) -->
-    <section class="hero card">
-      <div class="hero-left">
-        <div class="flow-visual card-glass">
-          <!-- Big stylized house SVG (s
+          <!-- Flow lines -->
+          <line id="solar-to-home" x1="60" y1="80" x2="310" y2="180" stroke="#FFD700" stroke-width="4">
+            <animate attributeName="stroke-dasharray" values="0,100;100,0" dur="2s" repeatCount="indefinite"/>
+          </line>
+          <line id="solar-to-battery" x1="60" y1="80" x2="180" y2="150" stroke="#FFD700" stroke-width="4">
+            <animate attributeName="stroke-dasharray" values="0,100;100,0" dur="2s" repeatCount="indefinite"/>
+          </line>
+          <line id="grid-to-home" x1="340" y1="80" x2="310" y2="150" stroke="#00BFFF" stroke-width="4">
+            <animate attributeName="stroke-dasharray" values="0,100;100,0" dur="2s" repeatCount="indefinite"/>
+          </line>
+          <line id="battery-to-home" x1="180" y1="220" x2="310" y2="180" stroke="#0EAA4B" stroke-width="4">
+            <animate attributeName="stroke-dasharray" values="0,100;100,0" dur="2s" repeatCount="indefinite"/>
+          </line>
+        </svg>
+      </div>
+    </section>
+
+    <!-- Metrics Section -->
+    <section class="cards-section">
+      <div class="card" id="savings-card">
+        <h3>Savings</h3>
+        <p id="savings-today">Today: €0.00</p>
+        <p id="savings-week">This Week: €0.00</p>
+      </div>
+      <div class="card">
+        <h3>Energy Independence</h3>
+        <p id="independence">0%</p>
+      </div>
+      <div class="card">
+        <h3>Impact</h3>
+        <p id="impact">CO₂ saved: 0kg</p>
+      </div>
+      <div class="card">
+        <h3>Consumption</h3>
+        <p id="consumption">0 kWh</p>
+      </div>
+    </section>
+
+    <!-- Forecast Graph Section -->
+    <section class="chart-section">
+      <h2>Forecast</h2>
+      <canvas id="forecastChart"></canvas>
+      <p class="tip" id="lifestyle-tip">Best time to run appliances will appear here.</p>
+    </section>
+  </main>
+
+  <script src="app.js"></script>
+</body>
+</html>
