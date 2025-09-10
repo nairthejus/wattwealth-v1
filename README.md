@@ -1,4 +1,4 @@
-# WattWealth Prototype — Elegant interactive version
+# WattWealth Prototype — Detailed interactive
 
 Files:
 - index.html
@@ -6,6 +6,11 @@ Files:
 - app.js
 - mockData.json
 
-How to edit: open these files in GitHub (Add file → Create new file OR click file → Edit) and paste updated content. Vercel will auto-deploy after commit.
+How to use:
+1. Paste these files into your GitHub repo (Add file → Create new file) replacing older ones.
+2. Connect repo to Vercel (or if already connected, Vercel will auto-deploy).
+3. Open the live URL. Edit `mockData.json` to tweak numbers for demos.
 
-This prototype is static (no build): simple HTML + JS + Chart.js. Use mockData.json to tweak values and see animations.
+Notes:
+- This prototype is purposely static; visually rich but not connected to live telemetry.
+- To integrate real data later, replace fetch('mockData.json') with your API endpoints and map fields.
