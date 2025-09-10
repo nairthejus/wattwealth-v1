@@ -3,31 +3,38 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>WattWealth — Prototype</title>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="styles.css">
+  <title>WattWealth — Prototype (Detailed)</title>
+
+  <!-- fonts + Chart.js -->
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700;800&display=swap" rel="stylesheet">
   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+  <link rel="stylesheet" href="styles.css">
 </head>
 <body>
   <!-- SIDEBAR -->
-  <aside id="sidebar" class="sidebar hidden">
+  <aside id="sidebar" class="sidebar hidden" aria-hidden="true">
     <button id="closeNav" class="icon-btn">✕</button>
     <div class="side-profile">
       <div class="avatar">J</div>
       <div>
         <div class="name">John Doe</div>
-        <div class="id muted">ID: 123456789</div>
+        <div class="id muted">Home ID: 123456</div>
       </div>
     </div>
+
     <nav class="side-nav">
-      <button class="side-item active">Energy Overview</button>
-      <button class="side-item">Battery Health</button>
+      <button class="side-item active">Overview</button>
       <button class="side-item">Forecast</button>
-      <button class="side-item">Impact</button>
+      <button class="side-item">Battery</button>
       <button class="side-item">Settings</button>
-      <button class="side-item">Help & Support</button>
+      <button class="side-item">Help</button>
     </nav>
-    <div class="side-logout"><button id="logoutBtn" class="ghost">Log out</button></div>
+
+    <div class="side-footer">
+      <div class="small muted">WattWealth • Prototype</div>
+      <button id="logoutBtn" class="ghost full">Log out</button>
+    </div>
   </aside>
 
   <!-- TOPBAR -->
@@ -40,113 +47,10 @@
     </div>
   </header>
 
+  <!-- MAIN -->
   <main class="main">
-    <!-- Hero Flow -->
+    <!-- Hero section with house + flows (left) and key metrics (right) -->
     <section class="hero card">
-      <div class="hero-top">
-        <h1>Live Energy Flow</h1>
-        <div class="subtitle muted">Transparent, automated steering | price & green-first</div>
-      </div>
-
-      <div class="hero-body">
-        <div class="flow-left">
-          <svg id="flowSVG" viewBox="0 0 700 380" preserveAspectRatio="xMidYMid meet">
-            <!-- nodes -->
-            <g id="node-solar" class="node" transform="translate(350,60)">
-              <circle r="36" class="node-bg solar"/>
-              <text class="label-title" y="6" text-anchor="middle">Solar</text>
-              <text class="label-value" id="solarK" y="26" text-anchor="middle">0.00 kW</text>
-            </g>
-
-            <g id="node-battery" class="node" transform="translate(120,210)">
-              <circle r="36" class="node-bg battery"/>
-              <text class="label-title" y="6" text-anchor="middle">Battery</text>
-              <text class="label-value" id="batteryPct" y="26" text-anchor="middle">0%</text>
-            </g>
-
-            <g id="node-grid" class="node" transform="translate(580,210)">
-              <circle r="36" class="node-bg grid"/>
-              <text class="label-title" y="6" text-anchor="middle">Grid</text>
-              <text class="label-value" id="gridK" y="26" text-anchor="middle">0.0 kW</text>
-            </g>
-
-            <g id="node-home" class="node" transform="translate(350,320)">
-              <circle r="36" class="node-bg home"/>
-              <text class="label-title" y="6" text-anchor="middle">Home</text>
-              <text class="label-value" id="homeK" y="26" text-anchor="middle">0.0 kW</text>
-            </g>
-
-            <!-- flow paths -->
-            <path id="pSolarToHome" class="flow-line solar-line" d="M350 96 C350 160 350 220 350 284" />
-            <path id="pSolarToBattery" class="flow-line solar-line" d="M330 84 C250 140 160 200 140 210" />
-            <path id="pBatteryToHome" class="flow-line battery-line" d="M153 220 C220 260 280 300 315 315" />
-            <path id="pGridToHome" class="flow-line grid-line" d="M547 213 C500 260 430 300 370 315" />
-          </svg>
-        </div>
-
-        <div class="flow-right">
-          <div class="stats-card">
-            <div class="stat">
-              <div class="s-title">Saving Rate</div>
-              <div class="s-value" id="savingRate">€0.00/hr</div>
-            </div>
-            <div class="stat">
-              <div class="s-title">Green Now</div>
-              <div class="s-value" id="greenPercent">0%</div>
-            </div>
-            <div class="stat">
-              <div class="s-title">Battery SoC</div>
-              <div class="s-value" id="batterySoC">0%</div>
-            </div>
-          </div>
-
-          <div class="quick-actions">
-            <button id="runWashing" class="btn">Suggest appliance time</button>
-            <button id="viewDetails" class="ghost">Why this decision?</button>
-          </div>
-        </div>
-      </div>
-    </section>
-
-    <!-- Content area -->
-    <section class="content card grid">
-      <div class="col">
-        <h3>Micro-Savings Story</h3>
-        <div id="narrativeText" class="narrative muted">Loading story…</div>
-        <div class="small-metrics">
-          <div><strong id="todaySaved">€0.00</strong><div class="muted">Today saved</div></div>
-          <div><strong id="weekSaved">€0.00</strong><div class="muted">This week</div></div>
-          <div><strong id="co2Saved">0.0 kg</strong><div class="muted">CO₂ saved</div></div>
-        </div>
-      </div>
-
-      <div class="col">
-        <h3>24-hour Forecast & Tips</h3>
-        <canvas id="forecastChart" height="140"></canvas>
-        <div id="tipsArea" class="tips muted">Loading tips…</div>
-      </div>
-
-      <div class="col">
-        <h3>Battery Health & Upsell</h3>
-        <div class="battery-card">
-          <div class="battery-visual"><div id="batteryFill" class="battery-fill"></div></div>
-          <div class="battery-meta">
-            <div>State of Health: <strong id="batterySOH">99%</strong></div>
-            <div>Cycles: <strong id="batteryCycles">120</strong></div>
-            <div class="muted">Estimated remaining life: <strong id="batteryLife">8 years</strong></div>
-          </div>
-        </div>
-        <div class="upgrade">
-          <div class="muted">Potential extra savings with larger battery:</div>
-          <div class="upgrade-amount" id="upgradeSavings">€0 / year</div>
-          <button id="upgradeBtn" class="btn">Explore upgrade</button>
-        </div>
-      </div>
-    </section>
-  </main>
-
-  <footer class="footer muted">Interactive prototype • WattWealth</footer>
-
-  <script src="app.js"></script>
-</body>
-</html>
+      <div class="hero-left">
+        <div class="flow-visual card-glass">
+          <!-- Big stylized house SVG (s
