@@ -1,436 +1,51 @@
-<!doctype html>
-<html lang="en">
-<head>
-<meta charset="utf-8" />
-<meta name="viewport" content="width=device-width,initial-scale=1" />
-<title>WattWealth — Forecast & Peak Shaving Visualization</title>
+<svg width="800" height="400" viewBox="0 0 800 400" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="24-hour stacked area chart of solar, battery, and grid power with load overlay">
+  <style>
+    .solar { fill: #FFD93B; }
+    .battery { fill: #0EAA4B; }
+    .grid { fill: #B0B0B0; }
+    .load-line { fill: none; stroke: #2D9CDB; stroke-width: 3; }
+    .axis { stroke: #333; stroke-width: 1; }
+    .tooltip { pointer-events: none; font-size: 14px; font-family: Arial, sans-serif; fill: white; }
+    .tooltip-bg { fill: #000; fill-opacity: 0.7; rx: 5; ry: 5; }
+    .hover-circle { fill: #0EAA4B; stroke: #fff; stroke-width: 2; visibility: hidden; }
+  </style>
 
-<!-- Chart.js -->
-<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <!-- Axes -->
+  <line class="axis" x1="50" y1="350" x2="750" y2="350" />
+  <line class="axis" x1="50" y1="50" x2="50" y2="350" />
 
-<style>
-  :root{
-    --bg:#071725;
-    --panel: rgba(255,255,255,0.02);
-    --card:#0f1720;
-    --muted:#9aa4ad;
-    --ww-green:#0EAA4B;
-    --accent-blue:#3AA0FF;
-    --gold:#F2C94C;
-    font-family: Inter, system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial;
-    color-scheme: dark;
-    color: #eaf4f4;
-  }
-  html,body{height:100%;margin:0;background:linear-gradient(180deg,#041121 0%, #071726 100%);-webkit-font-smoothing:antialiased}
-  .wrap{max-width:1100px;margin:18px auto;padding:18px;display:grid;grid-template-columns:1fr 360px;gap:18px}
-  header{grid-column:1/-1;display:flex;align-items:center;gap:12px}
-  header h1{margin:0;font-size:20px}
-  .alert{margin-left:auto;background:#2b2f33;padding:10px 12px;border-radius:10px;color:var(--muted);font-size:13px}
-  .main-card{background:var(--panel);padding:14px;border-radius:14px;box-shadow:0 10px 30px rgba(0,0,0,0.6);border:1px solid rgba(255,255,255,0.02)}
-  /* timeline */
-  .timeline-title{display:flex;align-items:center;justify-content:space-between;margin-bottom:8px}
-  .legend{display:flex;gap:8px;align-items:center}
-  .legend .dot{width:12px;height:12px;border-radius:4px}
-  .dot.solar{background:var(--gold)}
-  .dot.battery{background:var(--ww-green)}
-  .dot.grid{background:var(--accent-blue)}
-  .small{font-size:13px;color:var(--muted)}
-  canvas{background:transparent;border-radius:8px}
+  <!-- Stacked Area Paths -->
+  <!-- For brevity, simplified paths are shown - generate actual paths with data -->
+  <path class="grid" d="M50 300 L100 310 L150 320 L200 330 L250 340 L300 335 L350 320 L400 300 L450 290 L500 280 L550 270 L600 260 L650 250 L700 240 L750 230 L750 350 L50 350 Z"/>
+  <path class="battery" d="M50 250 L100 240 L150 230 L200 220 L250 210 L300 205 L350 190 L400 170 L450 160 L500 150 L550 140 L600 130 L650 125 L700 120 L750 115 L750 350 L50 350 Z"/>
+  <path class="solar" d="M50 200 L100 190 L150 180 L200 170 L250 160 L300 155 L350 140 L400 120 L450 110 L500 100 L550 95 L600 90 L650 85 L700 80 L750 75 L750 350 L50 350 Z"/>
 
-  /* right column */
-  .right-col{display:flex;flex-direction:column;gap:12px}
-  .card{background:var(--panel);padding:12px;border-radius:12px}
-  .peak-title{display:flex;align-items:center;justify-content:space-between}
-  .bar-wrap{display:flex;flex-direction:column;gap:8px;margin-top:8px}
-  .bar{height:18px;border-radius:10px;overflow:hidden;background:rgba(255,255,255,0.03);display:flex}
-  .bar .fill{height:100%;display:flex;align-items:center;padding-left:10px;font-weight:700;color:#041826}
-  .fill.before{background:#d1d5db} /* grey */
-  .fill.after{background:linear-gradient(90deg,var(--ww-green),#0b8f3d)}
-  .metric-row{display:flex;gap:10px;margin-top:10px}
-  .metric{flex:1;background:rgba(255,255,255,0.02);padding:10px;border-radius:8px;text-align:center}
-  .metric .num{font-size:18px;font-weight:800}
+  <!-- Load Line -->
+  <polyline class="load-line" points="50,300 100,290 150,280 200,270 250,260 300,255 350,240 400,220 450,210 500,200 550,195 600,190 650,185 700,180 750,175"/>
 
-  /* tips list */
-  .tips{margin-top:8px;display:flex;flex-direction:column;gap:8px}
-  .tip{background:rgba(255,255,255,0.02);padding:10px;border-radius:8px;display:flex;justify-content:space-between;align-items:center}
-  .tip .meta{color:var(--muted);font-size:13px}
-  .btn{background:var(--ww-green);color:#042;padding:8px 10px;border-radius:8px;border:none;font-weight:800;cursor:pointer}
-  .ghost{background:transparent;border:1px solid rgba(255,255,255,0.04);padding:8px 10px;border-radius:8px;color:var(--muted);cursor:pointer}
+  <!-- Interactive Circles for Hover -->
+  <!-- Example circles at hour intervals, visibility controlled via JS for interactivity -->
+  <circle class="hover-circle" cx="100" cy="295" r="6" />
+  <circle class="hover-circle" cx="150" cy="285" r="6" />
+  <circle class="hover-circle" cx="200" cy="275" r="6" />
+  <!-- Add more circles as needed -->
 
-  /* modal */
-  .modal-backdrop{position:fixed;inset:0;background:rgba(2,6,23,0.6);display:none;align-items:center;justify-content:center;z-index:60}
-  .modal{width:640px;background:var(--card);padding:18px;border-radius:12px;color:#eaf4f4}
-  .close{float:right;background:transparent;border:none;color:var(--muted);font-size:16px;cursor:pointer}
+  <!-- Tooltips containers (to be positioned and shown by JS) -->
+  <g id="tooltip" style="display:none;">
+    <rect class="tooltip-bg" x="0" y="0" width="140" height="50"/>
+    <text class="tooltip" x="10" y="20" id="tooltip-text">Tooltip info here</text>
+  </g>
 
-  /* rings */
-  .rings{display:flex;gap:12px;align-items:center}
-  .ring{width:84px;height:84px;border-radius:50%;background:linear-gradient(180deg,rgba(255,255,255,0.02),rgba(255,255,255,0.01));display:flex;align-items:center;justify-content:center;position:relative}
-  .ring .percent{font-weight:800}
-  .ring canvas{position:absolute;inset:0}
-  .muted{color:var(--muted)}
-
-  footer{grid-column:1/-1;margin-top:12px;text-align:center;color:var(--muted);font-size:13px}
-  @media (max-width:980px){
-    .wrap{grid-template-columns:1fr; padding:12px}
-    .right-col{order:2}
-  }
-</style>
-</head>
-<body>
-  <div class="wrap">
-    <header>
-      <h1>WattWealth — Forecast & Peak Shaving</h1>
-      <div class="alert" id="forecastAlert">Prices likely to spike at 18:00 — battery will cover peak.</div>
-    </header>
-
-    <!-- left: timeline & charts -->
-    <div>
-      <div class="main-card">
-        <div class="timeline-title">
-          <div>
-            <div style="font-weight:800">24-Hour Solar & Source Timeline</div>
-            <div class="small">Color bands show how WattWealth expects to source energy during each hour; price line is overlaid.</div>
-          </div>
-          <div class="legend">
-            <div class="dot solar"></div><div class="small">Solar</div>
-            <div class="dot battery"></div><div class="small">Battery</div>
-            <div class="dot grid"></div><div class="small">Grid</div>
-          </div>
-        </div>
-
-        <canvas id="timelineChart" height="160"></canvas>
-
-        <div style="display:flex;gap:12px;margin-top:12px;align-items:center">
-          <div class="small">Tap any hour on the chart to see the expected source breakdown and estimated savings.</div>
-          <button class="btn" style="margin-left:auto" id="trackImpactBtn">Track My Energy Impact</button>
-        </div>
-      </div>
-
-      <!-- production/consumption simplified -->
-      <div class="main-card" style="margin-top:12px">
-        <div style="display:flex;justify-content:space-between;align-items:center">
-          <div><strong>Production vs Consumption (sample)</strong><div class="small">Hover to compare</div></div>
-          <div class="small">Today</div>
-        </div>
-        <canvas id="prodChart" height="120" style="margin-top:12px"></canvas>
-      </div>
-    </div>
-
-    <!-- right: peak card, metrics, tips -->
-    <aside class="right-col">
-      <div class="card">
-        <div class="peak-title">
-          <div>
-            <div style="font-weight:800">Peak Shaving Achievements</div>
-            <div class="small">How much you avoided during peak hours</div>
-          </div>
-          <div style="text-align:right">
-            <div class="small">Today</div>
-            <div style="font-weight:800;font-size:18px" id="avoidedVal">€3.20</div>
-          </div>
-        </div>
-
-        <div class="bar-wrap">
-          <div class="small">If no optimization (grid-only) vs with WattWealth</div>
-          <div class="bar">
-            <div class="fill before" id="barBefore" style="width:70%">€12.80</div>
-          </div>
-          <div class="bar">
-            <div class="fill after" id="barAfter" style="width:53%">€9.60</div>
-          </div>
-        </div>
-
-        <div class="metric-row">
-          <div class="metric"><div class="small">Battery cycles saved</div><div class="num" id="cycles">5</div></div>
-          <div class="metric"><div class="small">Green % today</div><div class="num" id="greenPct">70%</div></div>
-        </div>
-      </div>
-
-      <div class="card">
-        <div style="display:flex;justify-content:space-between;align-items:center">
-          <div style="font-weight:800">Forecast-driven Tips</div>
-          <div class="small">Actionable</div>
-        </div>
-        <div class="tips" id="tipsList">
-          <!-- filled by JS -->
-        </div>
-      </div>
-
-      <div class="card">
-        <div style="display:flex;justify-content:space-between;align-items:center">
-          <div style="font-weight:800">Quick KPI</div>
-          <div class="small">Snapshot</div>
-        </div>
-        <div style="display:flex;gap:8px;margin-top:10px">
-          <div style="flex:1;text-align:center">
-            <div class="small">Today saved</div>
-            <div style="font-weight:800;font-size:16px" id="todaySaved">€3.20</div>
-          </div>
-          <div style="flex:1;text-align:center">
-            <div class="small">Lifetime saved</div>
-            <div style="font-weight:800;font-size:16px" id="lifeSaved">€520</div>
-          </div>
-        </div>
-      </div>
-    </aside>
-
-    <footer>Designed visualization • WattWealth prototype</footer>
-  </div>
-
-  <!-- modal: Track My Energy Impact -->
-  <div class="modal-backdrop" id="modal">
-    <div class="modal" role="dialog" aria-modal="true" aria-labelledby="impactTitle">
-      <button class="close" id="closeModal">✕</button>
-      <h2 id="impactTitle">Track My Energy Impact</h2>
-      <p class="small muted">Breakdown of how solar, battery and grid contributed.</p>
-
-      <div style="display:flex;gap:14px;margin-top:12px;align-items:center">
-        <div class="ring" aria-hidden="true">
-          <canvas id="ringSolar" width="84" height="84"></canvas>
-          <div class="percent" id="rSolar">0%</div>
-        </div>
-        <div class="ring" aria-hidden="true">
-          <canvas id="ringBattery" width="84" height="84"></canvas>
-          <div class="percent" id="rBattery">0%</div>
-        </div>
-        <div class="ring" aria-hidden="true">
-          <canvas id="ringGrid" width="84" height="84"></canvas>
-          <div class="percent" id="rGrid">0%</div>
-        </div>
-        <div style="flex:1">
-          <div style="font-weight:800" id="impHeadline">Solar supplied 70% of your usage today</div>
-          <div class="small muted" id="impSub">Battery shaved €3.20 in peak charges</div>
-          <div style="margin-top:12px"><button class="btn" id="exportCSV">Export report</button> <button class="ghost" id="closeModal2">Close</button></div>
-        </div>
-      </div>
-
-      <hr style="margin:14px 0;border:none;border-top:1px solid rgba(255,255,255,0.04)">
-
-      <div style="display:flex;gap:8px">
-        <div style="flex:1">
-          <div class="small muted">Period</div>
-          <select id="periodSelect" style="width:100%;padding:8px;border-radius:8px;border:none;background:rgba(255,255,255,0.02);color:#eaf4f4">
-            <option value="today">Today</option>
-            <option value="week">This week</option>
-            <option value="lifetime">Lifetime</option>
-          </select>
-        </div>
-        <div style="flex:1">
-          <div class="small muted">Compare</div>
-          <select id="compareSelect" style="width:100%;padding:8px;border-radius:8px;border:none;background:rgba(255,255,255,0.02);color:#eaf4f4">
-            <option value="gridOnly">Grid-only baseline</option>
-            <option value="noBattery">No battery</option>
-          </select>
-        </div>
-      </div>
-
-    </div>
-  </div>
+  <!-- Optional: X-axis labels -->
+  <text x="50" y="370" font-size="12" fill="#333">0h</text>
+  <text x="150" y="370" font-size="12" fill="#333">4h</text>
+  <text x="250" y="370" font-size="12" fill="#333">8h</text>
+  <text x="350" y="370" font-size="12" fill="#333">12h</text>
+  <text x="450" y="370" font-size="12" fill="#333">16h</text>
+  <text x="550" y="370" font-size="12" fill="#333">20h</text>
+  <text x="650" y="370" font-size="12" fill="#333">24h</text>
+</svg>
 
 <script>
-/* -------------------------
-   Mock data & helpers
-   ------------------------- */
-const mock = {
-  hours: Array.from({length:24},(_,i)=>String(i).padStart(2,'0') + ':00'),
-  solar: [0,0,0,0,0.2,0.8,1.6,2.8,3.6,4.0,4.4,4.8,4.2,3.4,2.4,1.2,0.6,0.3,0,0,0,0,0,0],
-  battery: [0.2,0.1,0.0,0.0,0,0.3,0.5,0.6,0.4,0.2,0,0,-0.2,-0.4,-0.5,-0.3,-0.1,-0.2,0.0,0.1,0.2,0.2,0.1,0.0],
-  grid: [0.8,0.9,1.0,1.1,1.3,1.0,0.2,0.5,0.2,0.1,0.0,0.0,0.3,0.6,1.0,1.2,1.6,2.2,2.8,2.0,1.8,1.6,1.3,1.0],
-  price: [0.24,0.22,0.21,0.20,0.20,0.19,0.18,0.16,0.12,0.10,0.09,0.10,0.12,0.15,0.18,0.20,0.22,0.26,0.34,0.30,0.25,0.22,0.21,0.23]
-};
-
-// compute "avoided" (simple sum difference for peak hours 17-19)
-function sumRange(arr, start, end){ return arr.slice(start,end+1).reduce((a,b)=>a+b,0); }
-const peakStart=17, peakEnd=19;
-const withoutOpt = sumRange(mock.grid,peakStart,peakEnd) * 1.0; // sim cost baseline (kW*1€/kWh for demo)
-const withOpt = sumRange(mock.grid,peakStart,peakEnd) * 0.75; // assume 25% saved
-const avoided = (withoutOpt - withOpt).toFixed(2);
-
-/* -------------------------
-   Chart: Timeline (stacked area + price)
-   ------------------------- */
-const ctx = document.getElementById('timelineChart').getContext('2d');
-
-const timelineChart = new Chart(ctx, {
-  type:'line',
-  data:{
-    labels: mock.hours,
-    datasets:[
-      { label:'Solar (kW)', data: mock.solar, borderColor:'rgba(242,201,76,0.9)', backgroundColor:'rgba(242,201,76,0.18)', order:3, fill:true, tension:0.25 },
-      { label:'Battery (kW)', data: mock.battery, borderColor:'rgba(14,170,75,0.9)', backgroundColor:'rgba(14,170,75,0.12)', order:2, fill:'origin', tension:0.25 },
-      { label:'Grid (kW)', data: mock.grid, borderColor:'rgba(58,160,255,0.9)', backgroundColor:'rgba(58,160,255,0.08)', order:1, fill:'start', tension:0.25 },
-      { label:'Price (€/kWh)', data: mock.price, type:'line', yAxisID:'yPrice', borderColor:'rgba(255,255,255,0.85)', backgroundColor:'rgba(255,255,255,0.02)', pointRadius:0, borderDash:[6,3], order:4 }
-    ]
-  },
-  options:{
-    maintainAspectRatio:false,
-    interaction:{mode:'nearest',axis:'x',intersect:false},
-    plugins:{
-      tooltip:{
-        callbacks:{
-          title: (items)=> items[0].label,
-          label: function(context){
-            const i=context.dataIndex;
-            return context.dataset.label + ': ' + context.parsed.y + (context.dataset.label==='Price (€/kWh)'? ' €/kWh' : ' kW');
-          },
-          afterBody: function(items){
-            const i=items[0].dataIndex;
-            // compute simple estimated saving if appliance moved to this hour
-            const price = mock.price[i];
-            const estSaved = (0.5*(0.3 + (0.25*(mock.solar[i])))).toFixed(2); // illustrative
-            return ['Estimated appliance saving: €' + estSaved];
-          }
-        }
-      },
-      legend:{display:false}
-    },
-    scales:{
-      y:{display:true,beginAtZero:true,position:'left',title:{display:true,text:'kW'}},
-      yPrice:{display:true,position:'right',grid:{drawOnChartArea:false},title:{display:true,text:'€/kWh'}}
-    },
-    onClick(evt, elements){
-      if(elements.length){
-        const idx = elements[0].index;
-        showHourDetails(idx);
-      }
-    }
-  }
-});
-
-/* -------------------------
-   small prod chart
-   ------------------------- */
-const ctx2 = document.getElementById('prodChart').getContext('2d');
-const prodChart = new Chart(ctx2,{
-  type:'bar',
-  data:{
-    labels: mock.hours,
-    datasets:[
-      {label:'Solar', data: mock.solar, backgroundColor:'rgba(242,201,76,0.9)'},
-      {label:'Load', data: mock.grid.map((g,i)=>g/1.2 + mock.solar[i]*0.4), backgroundColor:'rgba(155,139,230,0.85)'}
-    ]
-  },
-  options:{maintainAspectRatio:false,plugins:{legend:{position:'top'}},scales:{x:{display:false}}}
-});
-
-/* -------------------------
-   Populate right column & tips
-   ------------------------- */
-document.getElementById('avoidedVal').innerText = '€' + avoided;
-document.getElementById('barBefore').innerText = '€' + withoutOpt.toFixed(2);
-document.getElementById('barAfter').innerText = '€' + withOpt.toFixed(2);
-document.getElementById('greenPct').innerText = '70%';
-document.getElementById('todaySaved').innerText = '€' + (3.20).toFixed(2);
-document.getElementById('lifeSaved').innerText = '€' + (520).toFixed(0);
-document.getElementById('cycles').innerText = '5';
-
-/* tips generation: find top 3 cheapest hours */
-(function fillTips(){
-  const prices = mock.price.map((p,i)=>({p,i})).sort((a,b)=>a.p-b.p).slice(0,3);
-  const tipsList = document.getElementById('tipsList');
-  tipsList.innerHTML = '';
-  prices.forEach(entry=>{
-    const hr = mock.hours[entry.i];
-    const li = document.createElement('div'); li.className='tip';
-    li.innerHTML = `<div><strong>Run dishwasher at ${hr}</strong><div class="meta">Estimated saving: €${(0.5 + Math.random()*0.6).toFixed(2)}</div></div>
-                    <div><button class="btn" data-hour="${entry.i}">Schedule</button></div>`;
-    tipsList.appendChild(li);
-  });
-})();
-
-/* schedule button demo */
-document.addEventListener('click', e=>{
-  if(e.target.matches('.btn') && e.target.dataset.hour){
-    const h = mock.hours[e.target.dataset.hour];
-    alert(`Scheduled dishwasher suggestion at ${h} — (demo)`);
-  }
-});
-
-/* -------------------------
-   Hour detail explorer (opens small modal-like tooltip)
-   ------------------------- */
-function showHourDetails(i){
-  const hour=mock.hours[i];
-  const s = mock.solar[i], b=mock.battery[i], g=mock.grid[i], price=mock.price[i];
-  // generate a small explanation
-  let reason = '';
-  if(s > 1.5) reason = `Solar abundant: solar will supply home and charge battery between ${hour}.`;
-  else if(b < 0 && g>1) reason = `Battery discharging: shaving peak due to high price (${price}€/kWh).`;
-  else reason = `Grid expected to supply some load at ${hour}. Price: €${price}/kWh.`;
-  // show a simple toast-style overlay (use alert for this prototype)
-  alert(`${hour}\n\nSolar: ${s} kW\nBattery: ${b} kW\nGrid: ${g} kW\nPrice: €${price}/kWh\n\n${reason}\n\nEstimated appliance saving if moved here: €${(0.5 + Math.random()*0.6).toFixed(2)}`);
-}
-
-/* -------------------------
-   Modal: Track My Energy Impact (rings)
-   ------------------------- */
-const modal = document.getElementById('modal');
-document.getElementById('trackImpactBtn').addEventListener('click', ()=>{
-  modal.style.display='flex';
-  populateImpact('today');
-});
-document.getElementById('closeModal').addEventListener('click', ()=> modal.style.display='none');
-document.getElementById('closeModal2').addEventListener('click', ()=> modal.style.display='none');
-
-function populateImpact(period){
-  // simple mock percentages (would be computed from telemetry)
-  const solarPct = period==='today'?70:(period==='week'?62:58);
-  const battPct = period==='today'?18:(period==='week'?20:22);
-  const gridPct = 100 - solarPct - battPct;
-  document.getElementById('rSolar').innerText = solarPct + '%';
-  document.getElementById('rBattery').innerText = battPct + '%';
-  document.getElementById('rGrid').innerText = gridPct + '%';
-  document.getElementById('impHeadline').innerText = `Solar supplied ${solarPct}% of your usage (${period})`;
-  document.getElementById('impSub').innerText = `Battery shaved €${(avoided)} in peak charges`;
-  drawRing('ringSolar', solarPct, '#F2C94C');
-  drawRing('ringBattery', battPct, '#0EAA4B');
-  drawRing('ringGrid', gridPct, '#3AA0FF');
-}
-
-document.getElementById('periodSelect').addEventListener('change', (e)=>{
-  populateImpact(e.target.value);
-});
-
-/* draw a simple arc ring on the canvas element inside ring containers */
-function drawRing(id, pct, color){
-  const canvas = document.getElementById(id.replace('ring','ring'));
-  // actually map id names: ringSolar -> canvas id 'ringSolar' exists as canvas element id=ringSolar?
-  // We'll just fetch the correct canvas by scanning all ring canvases
-  const canvases = document.querySelectorAll('.ring canvas');
-  // map: first canvas -> solar, second->battery, third->grid
-  let idx=0;
-  if(id.toLowerCase().includes('battery')) idx=1; else if(id.toLowerCase().includes('grid')) idx=2;
-  const c = canvases[idx];
-  if(!c) return;
-  const ctx = c.getContext('2d');
-  const size = c.width;
-  ctx.clearRect(0,0,size,size);
-  const center = size/2;
-  const radius = center - 8;
-  // background track
-  ctx.beginPath(); ctx.arc(center,center,radius,0,Math.PI*2); ctx.strokeStyle='rgba(255,255,255,0.06)'; ctx.lineWidth=8; ctx.stroke();
-  // foreground
-  const end = (Math.PI*2) * (pct/100) - Math.PI/2;
-  ctx.beginPath(); ctx.arc(center,center,radius,-Math.PI/2,end); ctx.strokeStyle=color; ctx.lineWidth=8; ctx.lineCap='round'; ctx.stroke();
-}
-
-/* initial draw of rings */
-setTimeout(()=>{ populateImpact('today') }, 250);
-
-/* simple periodic animation updating labels slightly to feel alive */
-setInterval(()=>{
-  // tiny "live" simulation: wiggle greenPct
-  const g = 65 + Math.round(Math.random()*10);
-  document.getElementById('greenPct').innerText = g + '%';
-}, 3000);
-
-/* export (simulated) */
-document.getElementById('exportCSV').addEventListener('click', ()=>{
-  const csv = 'period,solarPct,batteryPct,gridPct\nToday,70,18,12';
-  const blob = new Blob([csv], {type:'text/csv'});
-  const url = URL.createObjectURL(blob);
-  const a = document.createElement('a'); a.href=url; a.download='wattwealth-impact.csv'; a.click(); URL.revokeObjectURL(url);
-});
+// JavaScript to add interactivity goes here: hover events, tooltip positioning, data binding
 </script>
-</body>
-</html>
