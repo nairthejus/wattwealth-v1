@@ -1,0 +1,12 @@
+/* Constrain chart containers to app-like proportions */
+.chart-container {
+  max-width: 100%;
+  height: 240px;        /* controls how tall */
+  margin: 0 auto;       /* center inside parent */
+  position: relative;
+}
+
+#timelineChart, #prodChart {
+  width: 100% !important;  /* force to container width */
+  height: 100% !important; /* respect container height */
+}
